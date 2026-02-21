@@ -1,38 +1,41 @@
-use ordered_float::OrderedFloat;
 use std::{collections::BinaryHeap, f64};
 
 pub struct Solution;
 
 impl Solution {
     pub fn min_cost_to_hire_k_employee(quality: Vec<i32>, wage: Vec<i32>, k: i32) -> f64 {
-        let mut ratio: Vec<Vec<f64>> = Vec::new();
+        let k = k as usize;
+        let mut ratio: Vec<(f64, i32)> = quality
+            .iter()
+            .zip(wage.iter())
+            .map(|(&q, &w)| (q, w as f64))
+            .map(|(q, w)| (w / q as f64, q))
+            .collect();
 
-        for i in 0..quality.len() {
-            ratio.push(vec![
-                (wage[i] as f64) / (quality[i] as f64),
-                quality[i] as f64,
-            ]);
-        }
+        ratio.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
 
-        ratio.sort_by(|a, b| a[0].partial_cmp(&b[0]).unwrap());
         let mut res = f64::MAX;
-        let mut qsum = 0.0;
+        let mut qsum: i32 = 0;
 
-        let mut pq: BinaryHeap<OrderedFloat<f64>> = BinaryHeap::new();
+        let mut pq: BinaryHeap<i32> = BinaryHeap::new();
 
-        for val in ratio {
-            qsum += val[1];
-            pq.push(OrderedFloat(val[1]));
+        for (r, q) in ratio {
+            qsum += q;
+            pq.push(q);
 
-            if pq.len() as i32 > k {
-                qsum -= *pq.pop().unwrap();
+            if pq.len() > k {
+                if let Some(q_) = pq.pop() {
+                    qsum -= q_
+                }
+                // qsum -= *pq.pop().unwrap();
             }
-            if pq.len() as i32 == k {
-                res = res.min((qsum as f64) * val[0]);
+
+            if pq.len() == k {
+                res = res.min(r * qsum as f64)
             }
         }
 
-        res as f64
+        res
     }
 }
 
