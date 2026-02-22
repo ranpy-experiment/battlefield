@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -e
 
 SRC_FILE="$1"
@@ -20,6 +19,13 @@ mkdir -p "$DEST_DIR"
 # ---- Parse filename ----
 BASENAME=$(basename "$SRC_FILE")        # _868_binary_gap.rs
 NAME_NO_EXT="${BASENAME%.rs}"           # _868_binary_gap
+
+# validate filename format
+if [[ ! "$NAME_NO_EXT" =~ ^_[0-9]+_.+ ]]; then
+  echo "Expected filename like _123_two_sum.rs"
+  exit 1
+fi
+
 NAME_NO_UNDERSCORE="${NAME_NO_EXT#_}"   # 868_binary_gap
 
 ID="${NAME_NO_UNDERSCORE%%_*}"          # 868
@@ -32,7 +38,7 @@ DEST_PATH="$DEST_DIR/$NEW_FILENAME"
 # ---- Copy file ----
 cp "$SRC_FILE" "$DEST_PATH"
 
-# ---- Trim everything after marker (keep marker line) ----
+# ---- Trim marker and everything after marker ----
 MARKER_TEXT="Code below here is only for local use"
 
 if grep -q "$MARKER_TEXT" "$DEST_PATH"; then
