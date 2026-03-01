@@ -15,4 +15,8 @@ fn main() {
         "Result: {}",
         problems::_868_binary_gap::Solution::binary_gap(22)
     );
+    println!(
+        "Result: {}",
+        problems::_1689_partitioning_into_minimum_number_of_deci_binary_numbers::Solution::min_partitions(String::from("32"))
+    );
 }
