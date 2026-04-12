@@ -2,9 +2,39 @@ use itertools::Itertools;
 
 impl Solution {
     pub fn reverse_words(s: String) -> String {
-        let str_val = s.trim();
+        let mut chars: Vec<char> = s.chars().collect();
+        chars.reverse();
+        chars.push(' ');
 
-        return str_val.split_whitespace().rev().join(" ");
+        let mut left = 0;
+        let mut right = 0;
+        let mut i = 0;
+
+        let n = chars.len() - 1;
+
+        while i < n {
+            while i < n && chars[i] == ' ' {
+                i += 1;
+            }
+
+            if i == n {
+                break;
+            }
+
+            while i < n && chars[i] != ' ' {
+                chars[right] = chars[i];
+                right += 1;
+                i += 1;
+            }
+            chars[left..right].reverse();
+            chars[right] = ' ';
+            right += 1;
+            left = right;
+            i += 1;
+        }
+
+        chars.truncate(right - 1);
+        chars.iter().collect()
     }
 }
 
