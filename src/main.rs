@@ -27,4 +27,11 @@ fn main() {
             vec![1, 0, 0]
         ))
     );
+
+    println!(
+        "Result: {}",
+        problems::_151_reverse_words_in_a_string::Solution::reverse_words(String::from(
+            "the sky is blue"
+        ))
+    );
 }
