@@ -33,7 +33,7 @@ impl Solution {
             i += 1;
         }
 
-        chars.truncate(right - 1);
+        chars.truncate(right.saturating_sub(1));
         chars.iter().collect()
     }
 }
